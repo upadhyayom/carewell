@@ -1,0 +1,460 @@
+// Future backend — the app currently runs fully on typed mock data in src/lib/data
+//
+// This schema mirrors the mock-data domain types in src/lib/data/types.ts so the
+// app can migrate to a real Postgres backend without reshaping its data model.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/* ------------------------------- enums ------------------------------ */
+
+enum Role {
+  ADMIN
+  DOCTOR
+  RECEPTIONIST
+}
+
+enum AppointmentStatus {
+  CONFIRMED
+  CHECKED_IN
+  IN_CHAIR
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+  PENDING
+}
+
+enum LeadStage {
+  NEW
+  CONTACTED
+  QUALIFIED
+  APPOINTMENT
+  VISITED
+  TREATMENT_STARTED
+  TREATMENT_COMPLETED
+  LOST
+}
+
+enum LeadScore {
+  HOT
+  WARM
+  COLD
+}
+
+enum LeadEventType {
+  CREATED
+  CALL
+  WHATSAPP
+  EMAIL
+  STAGE
+  NOTE
+  VISIT
+}
+
+enum LeadSource {
+  META_ADS
+  GOOGLE_ADS
+  WEBSITE
+  WHATSAPP
+  REFERRAL
+  WALK_IN
+  INSTAGRAM
+}
+
+enum ConsentStatus {
+  GENERATED
+  PRINTED
+  SIGNED_AND_FILED
+}
+
+enum InvoiceStatus {
+  PAID
+  PARTIAL
+  PENDING
+}
+
+enum CampaignPlatform {
+  META
+  GOOGLE
+}
+
+enum CampaignStatus {
+  ACTIVE
+  PAUSED
+  ENDED
+}
+
+enum NotificationType {
+  APPOINTMENT
+  BIRTHDAY
+  REVIEW
+  MISSED
+  PAYMENT
+  COURSE
+}
+
+enum StudentStage {
+  ENQUIRY
+  APPLICATION
+  INTERVIEW
+  ADMITTED
+  PAYMENT_DONE
+  COMPLETED
+  DROPPED
+}
+
+enum SocialPlatform {
+  INSTAGRAM
+  FACEBOOK
+  YOUTUBE
+  GOOGLE_BUSINESS
+}
+
+enum SocialStatus {
+  IDEA
+  DRAFTED
+  IN_REVIEW
+  APPROVED
+  SCHEDULED
+  PUBLISHED
+}
+
+/* ------------------------------- models ----------------------------- */
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  name          String
+  passwordHash  String
+  role          Role           @default(RECEPTIONIST)
+  phone         String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  doctor        Doctor?
+  leadsOwned    Lead[]         @relation("LeadOwner")
+  leadEvents    LeadEvent[]
+  notifications Notification[]
+}
+
+model Doctor {
+  id              String        @id @default(cuid())
+  user            User?         @relation(fields: [userId], references: [id])
+  userId          String?       @unique
+  name            String
+  title           String // e.g. "Implantologist & Oral Surgeon"
+  qualifications  String
+  experienceYears Int
+  specialities    String[]
+  bio             String
+  rating          Float         @default(0)
+  reviewCount     Int           @default(0)
+  casesCompleted  Int           @default(0)
+  availability    Json? // [{ day, slots }]
+  appointments    Appointment[]
+  treatmentPlans  TreatmentPlan[]
+  consentForms    ConsentForm[]
+}
+
+model Patient {
+  id           String          @id @default(cuid())
+  code         String          @unique // CW-P-1001
+  name         String
+  age          Int?
+  gender       String?
+  phone        String
+  email        String?
+  city         String?
+  bloodGroup   String?
+  allergies    String[]
+  conditions   String[]
+  registeredOn DateTime        @default(now())
+  lastVisit    DateTime?
+  notes        String?
+  appointments Appointment[]
+  treatments   TreatmentPlan[]
+  invoices     Invoice[]
+  consentForms ConsentForm[]
+  lead         Lead?           @relation(fields: [leadId], references: [id])
+  leadId       String?         @unique
+
+  @@index([phone])
+  @@index([name])
+}
+
+model Appointment {
+  id          String            @id @default(cuid())
+  code        String            @unique // APT-2401
+  patient     Patient           @relation(fields: [patientId], references: [id])
+  patientId   String
+  doctor      Doctor            @relation(fields: [doctorId], references: [id])
+  doctorId    String
+  treatment   String
+  scheduledAt DateTime
+  durationMin Int               @default(30)
+  status      AppointmentStatus @default(PENDING)
+  source      LeadSource        @default(WEBSITE)
+  notes       String?
+  invoice     Invoice?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([scheduledAt])
+  @@index([doctorId, scheduledAt])
+  @@index([patientId])
+  @@index([status])
+}
+
+model Lead {
+  id           String      @id @default(cuid())
+  code         String      @unique // LD-3001
+  name         String
+  phone        String
+  city         String?
+  treatment    String
+  source       LeadSource
+  campaign     Campaign?   @relation(fields: [campaignId], references: [id])
+  campaignId   String?
+  stage        LeadStage   @default(NEW)
+  value        Int         @default(0) // expected treatment value, INR
+  score        LeadScore   @default(WARM)
+  owner        User?       @relation("LeadOwner", fields: [ownerId], references: [id])
+  ownerId      String?
+  nextFollowUp DateTime?
+  notes        String[]
+  events       LeadEvent[]
+  patient      Patient?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([stage])
+  @@index([phone])
+  @@index([createdAt])
+  @@index([campaignId])
+  @@index([ownerId, nextFollowUp])
+}
+
+model LeadEvent {
+  id     String        @id @default(cuid())
+  lead   Lead          @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId String
+  type   LeadEventType
+  text   String
+  by     User?         @relation(fields: [byId], references: [id])
+  byId   String?
+  at     DateTime      @default(now())
+
+  @@index([leadId, at])
+}
+
+model Treatment {
+  id        String  @id @default(cuid())
+  slug      String  @unique
+  name      String
+  short     String
+  category  String
+  overview  Json?
+  benefits  Json?
+  procedure Json?
+  faqs      Json?
+  priceMin  Int
+  priceMax  Int
+  priceNote String?
+  duration  String?
+  sittings  String?
+  plans     TreatmentPlan[]
+  consents  ConsentTemplate[]
+}
+
+model TreatmentPlan {
+  id          String    @id @default(cuid())
+  patient     Patient   @relation(fields: [patientId], references: [id])
+  patientId   String
+  doctor      Doctor    @relation(fields: [doctorId], references: [id])
+  doctorId    String
+  treatment   Treatment @relation(fields: [treatmentId], references: [id])
+  treatmentId String
+  tooth       String?
+  status      String    @default("Planned") // Planned | Ongoing | Completed
+  cost        Int       @default(0)
+  startedOn   DateTime?
+  completedOn DateTime?
+
+  @@index([patientId])
+  @@index([doctorId])
+}
+
+model ConsentTemplate {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  treatment     Treatment?    @relation(fields: [treatmentId], references: [id])
+  treatmentId   String?
+  description   String
+  benefits      String[]
+  risks         String[]
+  complications String[]
+  alternatives  String[]
+  aftercare     String[]
+  forms         ConsentForm[]
+}
+
+model ConsentForm {
+  id          String          @id @default(cuid())
+  code        String          @unique // CW-CF-260101-001
+  patient     Patient         @relation(fields: [patientId], references: [id])
+  patientId   String
+  doctor      Doctor          @relation(fields: [doctorId], references: [id])
+  doctorId    String
+  template    ConsentTemplate @relation(fields: [templateId], references: [id])
+  templateId  String
+  language    String          @default("English")
+  status      ConsentStatus   @default(GENERATED)
+  generatedBy String
+  generatedAt DateTime        @default(now())
+
+  @@index([patientId])
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String
+  category    String
+  author      String
+  authorRole  String?
+  content     Json // [{ heading?, paragraphs[] }]
+  tags        String[]
+  readMins    Int      @default(5)
+  featured    Boolean  @default(false)
+  publishedAt DateTime @default(now())
+
+  @@index([category])
+  @@index([publishedAt])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  name      String
+  rating    Int
+  treatment String?
+  text      String
+  source    String // Google | Practo | JustDial
+  date      DateTime @default(now())
+
+  @@index([rating])
+  @@index([date])
+}
+
+model Course {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  name          String
+  tagline       String?
+  level         String // Beginner | Intermediate | Advanced
+  mode          String // On-campus | Hybrid | Online
+  duration      String?
+  fee           Int
+  seats         Int           @default(0)
+  nextBatch     String?
+  certification String?
+  overview      Json?
+  curriculum    Json?
+  faculty       String[]
+  outcomes      String[]
+  featured      Boolean       @default(false)
+  students      StudentLead[]
+}
+
+model StudentLead {
+  id            String       @id @default(cuid())
+  name          String
+  phone         String
+  city          String?
+  course        Course       @relation(fields: [courseId], references: [id])
+  courseId      String
+  stage         StudentStage @default(ENQUIRY)
+  batch         String?
+  feePaid       Int          @default(0)
+  feeTotal      Int          @default(0)
+  attendancePct Float?
+  createdAt     DateTime     @default(now())
+
+  @@index([courseId, stage])
+  @@index([phone])
+}
+
+model SocialPost {
+  id          String         @id @default(cuid())
+  platform    SocialPlatform
+  format      String // Reel | Carousel | Story | Post | Video | Short
+  title       String
+  pillar      String
+  status      SocialStatus   @default(IDEA)
+  caption     String?
+  scheduledAt DateTime?
+  reach       Int?
+  likes       Int?
+  comments    Int?
+  createdAt   DateTime       @default(now())
+
+  @@index([platform, status])
+  @@index([scheduledAt])
+}
+
+model Campaign {
+  id             String           @id @default(cuid())
+  name           String           @unique
+  platform       CampaignPlatform
+  objective      String?
+  status         CampaignStatus   @default(ACTIVE)
+  startDate      DateTime
+  endDate        DateTime?
+  spend          Int              @default(0)
+  reach          Int              @default(0)
+  impressions    Int              @default(0)
+  clicks         Int              @default(0)
+  leadCount      Int              @default(0)
+  qualifiedLeads Int              @default(0)
+  appointments   Int              @default(0)
+  revenue        Int              @default(0)
+  leads          Lead[]
+
+  @@index([platform, status])
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  code          String        @unique // INV-2653
+  patient       Patient       @relation(fields: [patientId], references: [id])
+  patientId     String
+  appointment   Appointment?  @relation(fields: [appointmentId], references: [id])
+  appointmentId String?       @unique
+  items         String
+  amount        Int
+  amountPaid    Int           @default(0)
+  status        InvoiceStatus @default(PENDING)
+  date          DateTime      @default(now())
+
+  @@index([patientId])
+  @@index([status])
+}
+
+model Notification {
+  id    String           @id @default(cuid())
+  user  User?            @relation(fields: [userId], references: [id])
+  userId String?
+  type  NotificationType
+  title String
+  text  String
+  read  Boolean          @default(false)
+  at    DateTime         @default(now())
+
+  @@index([userId, read])
+  @@index([at])
+}

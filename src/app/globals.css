@@ -1,26 +1,172 @@
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import "tw-animate-css";
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
+
+  /* Brand — CareWell teal */
+  --color-brand-50: #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-brand-200: #99f6e4;
+  --color-brand-300: #5eead4;
+  --color-brand-400: #2dd4bf;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+  --color-brand-800: #115e59;
+  --color-brand-900: #134e4a;
+  --color-brand-950: #042f2e;
+
+  /* Ink scale */
+  --color-ink-900: #0a0f0e;
+  --color-ink-700: #33403e;
+  --color-ink-500: #5c6b68;
+  --color-ink-400: #7c8a87;
+  --color-ink-300: #aab6b3;
+  --color-ink-200: #d5dddb;
+  --color-ink-100: #e8edec;
+  --color-ink-50: #f4f7f6;
+
+  /* Chart series (validated) */
+  --color-chart-1: #0d9488;
+  --color-chart-2: #2a78d6;
+  --color-chart-3: #eda100;
+  --color-chart-4: #4a3aa7;
+
+  /* Status */
+  --color-good: #0ca30c;
+  --color-warning: #fab219;
+  --color-serious: #ec835a;
+  --color-critical: #d03b3b;
+
+  --radius-xl2: 1.25rem;
+
+  --animate-accordion-down: accordion-down 0.25s ease-out;
+  --animate-accordion-up: accordion-up 0.25s ease-out;
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #fbfdfd;
+  --foreground: #0a0f0e;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #99f6e4;
+  color: #134e4a;
+}
+
+/* Hairline card ring used across the app */
+.ring-hairline {
+  box-shadow: 0 0 0 1px rgba(10, 15, 14, 0.06);
+}
+
+/* Soft elevated card shadow (Stripe-like) */
+.shadow-soft {
+  box-shadow:
+    0 1px 2px rgba(10, 15, 14, 0.04),
+    0 8px 24px -12px rgba(10, 15, 14, 0.12);
+}
+.shadow-lift {
+  box-shadow:
+    0 2px 4px rgba(10, 15, 14, 0.05),
+    0 20px 48px -20px rgba(13, 148, 136, 0.25);
+}
+
+/* Glass surface */
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+}
+
+/* Subtle grid background for hero sections */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(13, 148, 136, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(13, 148, 136, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.bg-dots {
+  background-image: radial-gradient(rgba(13, 148, 136, 0.14) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Text gradient */
+.text-gradient {
+  background: linear-gradient(120deg, #0f766e 0%, #0d9488 45%, #2a78d6 110%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Number columns */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, #eef2f1 25%, #f7faf9 50%, #eef2f1 75%);
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+  border-radius: 0.5rem;
+}
+
+/* Thin scrollbars in dashboard panes */
+.scroll-thin::-webkit-scrollbar { height: 6px; width: 6px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: #d5dddb; border-radius: 999px; }
+.scroll-thin::-webkit-scrollbar-track { background: transparent; }
+
+/* Print styles for consent forms */
+@media print {
+  body { background: #fff; }
+  .no-print { display: none !important; }
+  .print-page {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+  }
+  @page { size: A4; margin: 14mm; }
 }
