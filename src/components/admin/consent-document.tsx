@@ -118,7 +118,7 @@ export function ConsentDocument({
             <p className="text-lg font-bold leading-tight tracking-tight">{clinic.name}</p>
             <p className="mt-0.5 max-w-md text-[10px] leading-snug text-neutral-600">{clinic.address}</p>
             <p className="mt-0.5 text-[10px] text-neutral-600">
-              Phone: {clinic.phone} · Email: {clinic.email} · Reg. No: {clinic.regNo}
+              Phone: {clinic.phone} · Email: {clinic.email}{clinic.regNo ? ` · Reg. No: ${clinic.regNo}` : ""}
             </p>
           </div>
         </div>
@@ -194,10 +194,12 @@ export function ConsentDocument({
               <dt className="w-24 shrink-0 text-neutral-500">Qualifications</dt>
               <dd className="font-semibold">{doctor.qualifications}</dd>
             </div>
-            <div className="flex gap-2">
-              <dt className="w-24 shrink-0 text-neutral-500">Clinic Reg. No</dt>
-              <dd className="font-semibold tnum">{clinic.regNo}</dd>
-            </div>
+            {clinic.regNo && (
+              <div className="flex gap-2">
+                <dt className="w-24 shrink-0 text-neutral-500">Clinic Reg. No</dt>
+                <dd className="font-semibold tnum">{clinic.regNo}</dd>
+              </div>
+            )}
           </dl>
         </div>
       </div>

@@ -36,8 +36,8 @@ export function Footer() {
         <div className="md:col-span-4">
           <Logo />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-500">
-            {clinic.tagline} Serving Dwarka families since {clinic.established} with
-            evidence-based, anxiety-free dentistry.
+            {clinic.tagline} Honest, gentle dentistry for families in Dwarka,
+            New Delhi.
           </p>
           <div className="mt-5 flex gap-2">
             {[
@@ -57,10 +57,9 @@ export function Footer() {
               </a>
             ))}
           </div>
-          <div className="mt-6 flex items-center gap-2 rounded-xl bg-brand-50 px-3.5 py-2.5 text-[13px] text-brand-800 ring-1 ring-inset ring-brand-600/10">
-            <span className="font-semibold">★ {clinic.stats.googleRating}</span>
-            <span className="text-brand-700/70">· {clinic.stats.googleReviews.toLocaleString("en-IN")} Google reviews</span>
-          </div>
+          <a href={clinic.mapsLink} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-brand-50 px-3.5 py-2.5 text-[13px] font-medium text-brand-800 ring-1 ring-inset ring-brand-600/10 transition-colors hover:bg-brand-100">
+            ★ Find &amp; review us on Google
+          </a>
         </div>
 
         <div className="md:col-span-3">
@@ -85,11 +84,7 @@ export function Footer() {
           <h4 className="text-[13px] font-semibold uppercase tracking-wider text-ink-400">Clinic</h4>
           <ul className="mt-4 grid gap-2.5">
             {[
-              { label: "About Us", href: "/about" },
               { label: "CGHS Panel", href: "/cghs" },
-              { label: "CareWell Academy", href: "/academy" },
-              { label: "Blog", href: "/blog" },
-              { label: "Smile Stories", href: "/social-proof" },
               { label: "Contact", href: "/contact" },
               { label: "Book Appointment", href: "/book-appointment" },
             ].map((l) => (
@@ -133,7 +128,7 @@ export function Footer() {
 
       <div className="border-t border-ink-100">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-2 px-5 py-5 text-[12.5px] text-ink-400 sm:flex-row sm:px-8">
-          <span>© 2026 {clinic.name} · Reg. {clinic.regNo} · CGHS Empanelment {clinic.cghs.empanelmentNo}</span>
+          <span>© 2026 {clinic.name} · Vipin Garden, Dwarka Mor, New Delhi</span>
           <span className="inline-flex items-center gap-3">
             <Link href="/admin/login" className="transition-colors hover:text-brand-700">Staff Login</Link>
             <span className="h-3 w-px bg-ink-200" />

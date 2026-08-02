@@ -11,8 +11,8 @@ export const clinic = {
   whatsappLink: "https://wa.me/919811024365?text=Hi%20CareWell%2C%20I%27d%20like%20to%20book%20an%20appointment",
   email: "hello@carewell.clinic",
   mapsLink: "https://maps.google.com/?q=Carewell+Dental+Clinic+Vipin+Garden+Dwarka+Mor+New+Delhi",
-  gstin: "07AAHCC2481P1ZV",
-  regNo: "DL/DC/2012/04381",
+  gstin: "", // add real GSTIN when available
+  regNo: "", // add real clinic registration number
   hours: [
     { days: "Monday – Saturday", time: "9:30 AM – 2:00 PM" },
     { days: "Sunday", time: "Closed" },
@@ -64,7 +64,7 @@ export const clinic = {
   ],
   cghs: {
     empanelledSince: 2019,
-    empanelmentNo: "CGHS/DEL/DEN/2019/1147",
+    empanelmentNo: "", // add real CGHS empanelment number
     schemes: ["CGHS", "DGEHS", "ECHS", "CAPF (BSF/CRPF/CISF)"],
     highlights: [
       "Cashless treatment for CGHS card holders (referral basis)",
@@ -81,12 +81,12 @@ export const clinic = {
     coveredNote: "Consultation, extractions, fillings, root canal, scaling, dentures and specified procedures are covered as per current CGHS rate list. Implants and cosmetic work are payable privately.",
   },
   facilities: [
-    { name: "CBCT & Digital X-Ray", note: "In-house 3D imaging", img: "opg" },
-    { name: "Class-B Sterilization", note: "Sealed-pouch instruments", img: "steri" },
-    { name: "Dedicated Surgical Suite", note: "For implants & extractions", img: "surgery" },
-    { name: "Kids' Corner", note: "Cartoons & play area", img: "kids" },
-    { name: "Wheelchair Access", note: "Lift + ramp from parking", img: "access" },
-    { name: "Basement Parking", note: "Free for patients", img: "parking" },
+    { name: "Digital X-Ray", note: "Quick, low-dose imaging", img: "opg" },
+    { name: "Strict Sterilization", note: "Fresh, sealed instruments for every patient", img: "steri" },
+    { name: "Minor Surgery Setup", note: "For extractions & implants", img: "surgery" },
+    { name: "Kids-Friendly Care", note: "Gentle first visits", img: "kids" },
+    { name: "Comfortable Seating", note: "Clean, calm waiting area", img: "access" },
+    { name: "Easy to Reach", note: "2 min from Dwarka Mor metro", img: "parking" },
   ],
   instagram: {
     handle: "carewell.dental",

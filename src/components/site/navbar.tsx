@@ -12,12 +12,8 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 
 const nav = [
-  { label: "About", href: "/about" },
   { label: "Services", href: "/services", mega: true },
   { label: "CGHS Panel", href: "/cghs" },
-  { label: "Academy", href: "/academy" },
-  { label: "Blog", href: "/blog" },
-  { label: "Smile Stories", href: "/social-proof" },
   { label: "Contact", href: "/contact" },
 ];
 

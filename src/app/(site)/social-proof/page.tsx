@@ -13,6 +13,7 @@ import { cn, formatDate, initials } from "@/lib/utils";
 import type { SocialPost } from "@/lib/data/types";
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: false },
   title: "Smile Stories — Reviews, Transformations & Patient Voices | CareWell",
   description:
     "4.9-star rated by 1,284 patients on Google. Real reviews, before-and-after smile transformations, video testimonials and behind-the-scenes stories from CareWell Dental Clinic, Dwarka.",

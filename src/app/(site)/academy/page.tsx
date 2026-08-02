@@ -29,6 +29,7 @@ import { inr, initials } from "@/lib/utils";
 import type { Course } from "@/lib/data/types";
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: false },
   title: "CareWell Academy — Learn Dentistry from Practicing Clinicians | Dwarka",
   description:
     "Dental assistant training, implant courses, clinical internships and CE workshops at CareWell Academy, Dwarka. 480+ graduates, 92% placement, small batches, real chairside training.",

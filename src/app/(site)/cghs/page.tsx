@@ -27,11 +27,11 @@ export default function CghsPage() {
               CGHS empanelled dental care
             </h1>
             <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-ink-500">
-              Serving Central Government employees, pensioners and their families
-              since {c.empanelledSince}. Treatment at approved CGHS rates, with cashless
-              facility on referral and full reimbursement paperwork support.
+              Serving Central Government employees, pensioners and their families.
+              Treatment at approved CGHS rates, with cashless facility on referral
+              and full reimbursement paperwork support.
             </p>
-            <p className="mt-3 text-[13px] text-ink-400">Empanelment No. {c.empanelmentNo}</p>
+            {c.empanelmentNo && <p className="mt-3 text-[13px] text-ink-400">Empanelment No. {c.empanelmentNo}</p>}
             <div className="mt-5 flex flex-wrap gap-2">
               {c.schemes.map((s) => <Badge key={s}>{s}</Badge>)}
             </div>

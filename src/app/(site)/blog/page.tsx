@@ -12,6 +12,7 @@ import { blogPosts, blogCategories } from "@/lib/data/blog";
 import { cn, formatDate, initials } from "@/lib/utils";
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: false },
   title: "Dental Health Blog — Honest Guides from Practicing Dentists | CareWell",
   description:
     "100+ plain-language articles on implants, braces, kids' dentistry, smile design and everyday oral health — written by the clinicians at CareWell Dental Clinic, Dwarka.",

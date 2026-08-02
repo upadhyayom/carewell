@@ -22,6 +22,7 @@ import { doctors, staff } from "@/lib/data/people";
 import { cn, initials } from "@/lib/utils";
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: false },
   title: "About Us — Our Story, Doctors & Values",
   description:
     "From a single chair in 2012 to a NABH-accredited clinic on Dwarka Mor — meet the doctors, team and values behind 21,400+ transformed smiles at CareWell Dental Clinic, Dwarka.",

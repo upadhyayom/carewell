@@ -3,22 +3,19 @@ import Link from "next/link";
 import {
   Phone, MessageCircle, CalendarCheck, MapPin, Clock, BadgeCheck, Star,
   ShieldCheck, Stethoscope, Baby, Sparkles, Syringe, Smile, CircleDot,
-  Scan, Accessibility, Car, ArrowRight, GraduationCap,
+  Scan, Accessibility, Car, ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Section, SectionHeading, Eyebrow } from "@/components/site/section";
 import { ClinicImage, treatmentPhoto } from "@/components/site/clinic-image";
-import { GoogleReviews } from "@/components/site/google-reviews";
-import { InstagramFeed } from "@/components/site/instagram-feed";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { Parallax } from "@/components/site/scroll-fx";
 import { clinic } from "@/lib/data/clinic";
 import { doctors } from "@/lib/data/people";
 import { treatments } from "@/lib/data/treatments";
-import { blogPosts } from "@/lib/data/blog";
-import { inr, initials } from "@/lib/utils";
+import { inr } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "CareWell Dental Clinic, Dwarka — CGHS Empanelled | Implants, Braces, Kids Dentistry",
@@ -42,8 +39,6 @@ const serviceIcons: Record<string, React.ElementType> = {
 };
 
 export default function HomePage() {
-  const featuredBlogs = blogPosts.filter((b) => b.featured).slice(0, 3);
-
   return (
     <>
       {/* ------------------------------ HERO ------------------------------ */}
@@ -55,8 +50,7 @@ export default function HomePage() {
               <Reveal>
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge className="gap-1.5 py-1"><BadgeCheck className="size-3.5" /> CGHS Empanelled</Badge>
-                  <Badge variant="secondary" className="py-1">NABH Accredited</Badge>
-                  <Badge variant="secondary" className="py-1">Since {clinic.established}</Badge>
+                  <Badge variant="secondary" className="py-1">2 min from Dwarka Mor Metro</Badge>
                 </div>
                 <h1 className="mt-5 text-balance text-4xl font-semibold leading-[1.08] tracking-tight text-ink-900 md:text-5xl">
                   Trusted dental clinic in Dwarka, New Delhi for your whole family
@@ -81,10 +75,10 @@ export default function HomePage() {
                 <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13.5px] text-ink-500">
                   <span className="inline-flex items-center gap-1.5">
                     <Star className="size-4 fill-[#fbbc05] text-[#fbbc05]" />
-                    <b className="text-ink-900">{clinic.stats.googleRating}</b> · {clinic.stats.googleReviews.toLocaleString("en-IN")} Google reviews
+                    <a href={clinic.mapsLink} target="_blank" rel="noopener noreferrer" className="font-medium text-ink-900 hover:text-brand-700">Rated on Google — read our reviews</a>
                   </span>
-                  <span><b className="text-ink-900">{clinic.stats.smilesTransformed.toLocaleString("en-IN")}+</b> patients treated</span>
-                  <span><b className="text-ink-900">{clinic.stats.implantsPlaced.toLocaleString("en-IN")}+</b> implants placed</span>
+                  <span><b className="text-ink-900">CGHS</b> cashless available</span>
+                  <span><b className="text-ink-900">EMI</b> on major treatments</span>
                 </div>
               </Reveal>
             </div>
@@ -124,7 +118,7 @@ export default function HomePage() {
           {[
             { icon: Clock, t: "Open Mon–Sat · 9:30 AM – 2:00 PM", s: "Sunday closed" },
             { icon: MapPin, t: "Vipin Garden, Dwarka Mor", s: "2 min from Dwarka Mor metro" },
-            { icon: BadgeCheck, t: "CGHS cashless facility", s: `Empanelled since ${clinic.cghs.empanelledSince}` },
+            { icon: BadgeCheck, t: "CGHS cashless facility", s: "Bring your card + referral slip" },
             { icon: Phone, t: "Dental emergency?", s: "Same-day slots · call us" },
           ].map((x) => (
             <div key={x.t} className="flex items-center gap-3.5 bg-white p-5">
@@ -186,9 +180,11 @@ export default function HomePage() {
               <h2 className="text-balance text-2xl font-semibold tracking-tight text-white md:text-3xl">
                 CGHS empanelled dental centre
               </h2>
-              <p className="mt-2 text-[13.5px] text-white/60">
-                Empanelment No. {clinic.cghs.empanelmentNo}
-              </p>
+              {clinic.cghs.empanelmentNo && (
+                <p className="mt-2 text-[13.5px] text-white/60">
+                  Empanelment No. {clinic.cghs.empanelmentNo}
+                </p>
+              )}
               <ul className="mt-6 space-y-3">
                 {clinic.cghs.highlights.map((h) => (
                   <li key={h} className="flex items-start gap-2.5 text-[14px] leading-snug text-white/85">
@@ -293,11 +289,10 @@ export default function HomePage() {
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 rounded-2xl bg-ink-50 px-6 py-5 text-center">
           {[
-            { v: `${clinic.stats.yearsOfCare} years`, l: "of practice" },
-            { v: "4 chairs", l: "modern operatories" },
-            { v: "Class-B", l: "autoclave sterilization" },
             { v: "Same-day", l: "emergency slots" },
+            { v: "Strict", l: "sterilization every time" },
             { v: "EMI", l: "available on treatments" },
+            { v: "2 min", l: "from Dwarka Mor metro" },
           ].map((s) => (
             <span key={s.l} className="text-[13.5px] text-ink-500">
               <b className="text-ink-900">{s.v}</b> {s.l}
@@ -308,65 +303,22 @@ export default function HomePage() {
 
       {/* ------------------------- GOOGLE REVIEWS ------------------------- */}
       <Section>
-        <SectionHeading eyebrow="Google Reviews" title="What our patients say" />
-        <GoogleReviews />
-      </Section>
-
-      {/* ------------------------- INSTAGRAM FEED ------------------------- */}
-      <Section className="pt-0">
-        <div className="grid items-start gap-8 lg:grid-cols-5">
-          <div className="lg:col-span-2">
-            <SectionHeading
-              eyebrow="Instagram"
-              title="Life at the clinic"
-              lead="Patient stories, tips from our doctors and a look behind the scenes."
-              className="mb-6"
-            />
-            <div className="hidden lg:block">
-              <Button variant="outline" asChild>
-                <a href={clinic.social.instagram} target="_blank" rel="noopener noreferrer">
-                  Follow @{clinic.instagram.handle}
-                </a>
-              </Button>
-            </div>
-          </div>
-          <div className="lg:col-span-3">
-            <InstagramFeed />
-          </div>
-        </div>
-      </Section>
-
-      {/* ---------------------------- ACADEMY + BLOG ----------------------- */}
-      <Section className="pt-0">
-        <div className="grid gap-5 lg:grid-cols-3">
-          <Reveal className="lg:col-span-1">
-            <div className="flex h-full flex-col rounded-3xl bg-brand-50 p-7 ring-1 ring-inset ring-brand-600/10">
-              <GraduationCap className="size-7 text-brand-700" />
-              <h3 className="mt-4 text-xl font-semibold text-ink-900">CareWell Academy</h3>
-              <p className="mt-2 text-[14px] leading-relaxed text-ink-500">
-                Hands-on training for dental assistants, receptionists and clinicians. Next batch: August 2026.
-              </p>
-              <div className="mt-auto pt-5">
-                <Button variant="soft" asChild>
-                  <Link href="/academy">View courses <ArrowRight /></Link>
-                </Button>
+        <Reveal>
+          <div className="flex flex-col items-center justify-between gap-5 rounded-3xl bg-white p-8 ring-hairline shadow-soft sm:flex-row md:p-10">
+            <div>
+              <div className="flex items-center gap-2">
+                {[1, 2, 3, 4, 5].map((i) => <Star key={i} className="size-5 fill-[#fbbc05] text-[#fbbc05]" />)}
               </div>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-ink-900">Patients rate us on Google</h2>
+              <p className="mt-2 max-w-md text-[14.5px] leading-relaxed text-ink-500">
+                Don&apos;t take our word for it — read real reviews from real patients on our Google profile.
+              </p>
             </div>
-          </Reveal>
-          {featuredBlogs.slice(0, 2).map((b, i) => (
-            <Reveal key={b.slug} delay={0.08 * (i + 1)}>
-              <Link href={`/blog/${b.slug}`} className="group flex h-full flex-col rounded-3xl bg-white p-7 ring-hairline shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-lift">
-                <Badge variant="secondary" className="w-fit">{b.category}</Badge>
-                <h3 className="mt-3 text-[16.5px] font-semibold leading-snug text-ink-900 group-hover:text-brand-800">{b.title}</h3>
-                <p className="mt-2 line-clamp-2 text-[13.5px] leading-relaxed text-ink-500">{b.excerpt}</p>
-                <div className="mt-auto flex items-center gap-2 pt-4 text-[12.5px] text-ink-400">
-                  <span className="flex size-6 items-center justify-center rounded-full bg-brand-100 text-[10px] font-semibold text-brand-800">{initials(b.author)}</span>
-                  {b.author} · {b.readMins} min read
-                </div>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
+            <Button size="lg" variant="outline" asChild>
+              <a href={clinic.mapsLink} target="_blank" rel="noopener noreferrer">Read our Google reviews</a>
+            </Button>
+          </div>
+        </Reveal>
       </Section>
 
       {/* ------------------------------ FAQ ------------------------------- */}
@@ -376,7 +328,7 @@ export default function HomePage() {
             <SectionHeading eyebrow="FAQs" title="Questions patients ask us every day" className="mb-6" />
             <Accordion type="single" collapsible className="rounded-2xl bg-white px-5 ring-hairline shadow-soft">
               {[
-                { q: "Do you accept CGHS cards?", a: `Yes. We are CGHS empanelled (No. ${clinic.cghs.empanelmentNo}) and also serve DGEHS, ECHS and CAPF beneficiaries. Bring your card and referral slip; our desk handles the paperwork.` },
+                { q: "Do you accept CGHS cards?", a: "Yes. We are CGHS empanelled and also serve DGEHS, ECHS and CAPF beneficiaries. Bring your card and referral slip; our desk handles the paperwork." },
                 { q: "How much will my treatment cost?", a: "It depends on your check-up, so we don't list prices online. After the doctor examines you, you get a written estimate before any treatment starts — and it doesn't change midway. EMI options are available." },
                 { q: "Is root canal treatment painful?", a: "No. RCTs are done under local anaesthesia and most patients report little to no pain. Single-visit RCT is available for suitable cases." },
                 { q: "Do you see children?", a: "Yes — we have a dedicated kids' corner and both doctors are experienced with young patients. First dental visits are recommended by age 3." },
