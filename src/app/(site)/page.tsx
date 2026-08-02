@@ -422,16 +422,15 @@ export default function HomePage() {
           <div className="flex flex-col">
             <SectionHeading eyebrow="Visit Us" title="How to reach our clinic" className="mb-6" />
             <div className="flex flex-1 flex-col overflow-hidden rounded-2xl bg-white ring-hairline shadow-soft">
-              <div className="relative min-h-[220px] flex-1">
-                <ClinicImage id="clinic" alt="CareWell Dental Clinic building" className="absolute inset-0" />
-                <a
-                  href={clinic.mapsLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="glass absolute bottom-4 left-4 flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-semibold text-ink-900 shadow-lift"
-                >
-                  <MapPin className="size-4 text-brand-700" /> Open in Google Maps
-                </a>
+              <div className="relative min-h-[260px] flex-1">
+                <iframe
+                  title="CareWell Dental Clinic on Google Maps"
+                  src="https://maps.google.com/maps?q=CareWell%20Dental%20Clinic%20on%20CGHS%20panel%20Vipin%20Garden%20Dwarka%20Mor%20New%20Delhi&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  className="absolute inset-0 h-full w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
               </div>
               <div className="grid gap-4 p-5 sm:grid-cols-2">
                 <div className="text-[13.5px] leading-relaxed text-ink-500">

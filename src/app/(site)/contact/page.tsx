@@ -195,34 +195,18 @@ export default function ContactPage() {
             {/* ---------------------------------------------------------- */}
             <div className="space-y-5">
               <Reveal delay={0.08}>
-                <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-50 via-white to-blue-50 ring-hairline shadow-soft">
-                  <div className="absolute inset-0 bg-grid" />
-                  {/* Faux roads */}
-                  <div className="pointer-events-none absolute inset-0">
-                    <div className="absolute left-[18%] top-0 h-full w-3 -rotate-6 rounded-full bg-white/80 shadow-[0_0_0_1px_rgba(10,15,14,0.04)]" />
-                    <div className="absolute left-0 top-[34%] h-3 w-full rotate-2 rounded-full bg-white/80 shadow-[0_0_0_1px_rgba(10,15,14,0.04)]" />
-                    <div className="absolute right-[12%] top-0 h-full w-2 rotate-12 rounded-full bg-white/60" />
-                    <div className="absolute left-[42%] top-[15%] size-16 rounded-xl bg-brand-100/60" />
-                    <div className="absolute right-[22%] bottom-[18%] size-20 rounded-xl bg-blue-100/50" />
-                    <div className="absolute left-[10%] bottom-[10%] size-12 rounded-full bg-emerald-100/60" />
-                  </div>
-
-                  <div className="relative flex h-72 flex-col items-center justify-center sm:h-80">
-                    {/* Map pin */}
-                    <div className="relative">
-                      <span className="absolute -inset-4 animate-ping rounded-full bg-brand-500/20 [animation-duration:2.2s]" />
-                      <svg viewBox="0 0 48 48" className="relative size-14 drop-shadow-lg" aria-hidden>
-                        <path
-                          d="M24 3C15.7 3 9 9.7 9 18c0 10.5 15 27 15 27s15-16.5 15-27c0-8.3-6.7-15-15-15Z"
-                          className="fill-brand-600"
-                        />
-                        <circle cx="24" cy="18" r="6" className="fill-white" />
-                      </svg>
-                    </div>
-                    <p className="mt-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-ink-900 shadow-soft backdrop-blur">
-                      {clinic.shortAddress}
-                    </p>
-                    <Button className="mt-5" asChild>
+                <div className="overflow-hidden rounded-3xl ring-hairline shadow-soft">
+                  <iframe
+                    title="CareWell Dental Clinic on Google Maps"
+                    src="https://maps.google.com/maps?q=CareWell%20Dental%20Clinic%20on%20CGHS%20panel%20Vipin%20Garden%20Dwarka%20Mor%20New%20Delhi&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                    className="h-72 w-full border-0 sm:h-80"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                  />
+                  <div className="flex items-center justify-between gap-3 bg-white px-4 py-3">
+                    <span className="text-[13px] font-medium text-ink-700">{clinic.shortAddress}</span>
+                    <Button size="sm" variant="soft" asChild>
                       <a href={clinic.mapsLink} target="_blank" rel="noopener noreferrer">
                         Open in Google Maps <ExternalLink />
                       </a>
