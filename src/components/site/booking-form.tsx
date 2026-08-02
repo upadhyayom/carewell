@@ -269,6 +269,7 @@ export function BookingForm() {
         cghs: false,
         score: "Warm",
         value: 5000,
+        source: "booking-form",
         slot: {
           date: values.date,
           label: d.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" }),

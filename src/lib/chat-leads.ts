@@ -18,6 +18,7 @@ export interface ChatLeadInput {
   score: "Hot" | "Warm" | "Cold";
   value: number;
   slot?: { date: string; label: string; time: string };
+  source?: "chatbot" | "booking-form";
 }
 
 function read<T>(key: string): T[] {
@@ -88,6 +89,27 @@ export function saveChatLead(input: ChatLeadInput): { lead: Lead; appointment?: 
     };
     write(APPTS_KEY, [appointment, ...appts]);
   }
+
+  // Notify the clinic + central database (works once env keys are set — see AUTOMATION.md)
+  try {
+    void fetch("/api/lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        kind: input.source ?? "chatbot",
+        name: input.name,
+        phone: input.phone,
+        treatment: input.treatment,
+        urgency: input.urgency,
+        timeline: input.timeline,
+        cghs: input.cghs,
+        score: input.score,
+        slotDate: input.slot?.date,
+        slotTime: input.slot?.time,
+      }),
+      keepalive: true,
+    });
+  } catch {}
 
   return { lead, appointment };
 }
