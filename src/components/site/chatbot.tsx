@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MessageCircle, Send, X, Check, Phone } from "lucide-react";
 import { clinic } from "@/lib/data/clinic";
 import { saveChatLead, type ChatLeadInput } from "@/lib/chat-leads";
+import { pixelTrack } from "@/lib/pixel";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -204,6 +205,9 @@ export function Chatbot() {
     data.current.score = score;
     data.current.slot = slot;
     saveChatLead(payload);
+    // Meta Pixel conversion events — ads optimise for real bookings, not clicks
+    pixelTrack("Lead", { content_name: payload.treatment, content_category: "chatbot" });
+    if (slot) pixelTrack("Schedule", { content_name: payload.treatment });
     setStep("done");
     if (slot) {
       await botSay(`Done, ${payload.name.split(" ")[0]}! 🎉 Your visit for ${payload.treatment} is requested for ${slot.label} at ${slot.time}.`);

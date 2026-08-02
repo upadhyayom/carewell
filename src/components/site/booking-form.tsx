@@ -276,6 +276,11 @@ export function BookingForm() {
         },
       });
     } catch {}
+    try {
+      const { pixelTrack } = await import("@/lib/pixel");
+      pixelTrack("Lead", { content_name: values.treatment, content_category: "booking-form" });
+      pixelTrack("Schedule", { content_name: values.treatment });
+    } catch {}
     setSubmitted(values);
   };
 
