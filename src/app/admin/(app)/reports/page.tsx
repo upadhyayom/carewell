@@ -31,10 +31,6 @@ const NEW_PATIENTS = revenueByMonth.map((m) => Math.round(m.patients * 0.38));
 const RETURNING_PATIENTS = revenueByMonth.map((m, i) => m.patients - NEW_PATIENTS[i]);
 
 /** Course fees collected by month (₹) — static series. */
-const COURSE_SALES = {
-  labels: ["Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-  data: [185000, 240000, 310000, 365000, 425000, 512000],
-};
 
 /** Doctor comparison — static sensible values for the current period scale. */
 const doctorRows = [
@@ -113,10 +109,6 @@ export default function ReportsPage() {
     lines.push("Treatment revenue mix (%)");
     lines.push("Treatment,Share");
     treatmentRevenueSplit.forEach((t) => lines.push(`${csvEscape(t.name)},${t.value}`));
-    lines.push("");
-    lines.push("Course fees collected by month");
-    lines.push("Month,Fees (INR)");
-    COURSE_SALES.labels.forEach((m, i) => lines.push(`${m},${COURSE_SALES.data[i]}`));
 
     const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -145,7 +137,7 @@ export default function ReportsPage() {
       <div className="no-print">
         <PageHeader
           title="Reports"
-          description="Clinic performance across appointments, revenue, marketing and the academy."
+          description="Clinic performance across appointments, revenue and marketing."
           actions={
             <>
               <Button variant="secondary" onClick={exportCsv}>
@@ -292,15 +284,6 @@ export default function ReportsPage() {
           />
         </ChartCard>
 
-        {/* Course sales */}
-        <ChartCard title="Course sales" subtitle="Academy fees collected by month">
-          <BarChart
-            labels={COURSE_SALES.labels}
-            series={[{ label: "Fees collected", data: COURSE_SALES.data }]}
-            valueFormat={(v) => inr(v, true)}
-            height={240}
-          />
-        </ChartCard>
       </div>
     </div>
   );

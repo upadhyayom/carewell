@@ -10,7 +10,7 @@ export const clinic = {
   whatsapp: "+91 99100 18779",
   whatsappLink: "https://wa.me/919910018779?text=Hi%20CareWell%2C%20I%27d%20like%20to%20book%20an%20appointment",
   email: "hello@carewell.clinic",
-  mapsLink: "https://maps.google.com/?q=Carewell+Dental+Clinic+Vipin+Garden+Dwarka+Mor+New+Delhi",
+  mapsLink: "https://share.google/CbQHgI4lgJ51uUha7",
   gstin: "", // add real GSTIN when available
   regNo: "", // add real clinic registration number
   hours: [
@@ -28,8 +28,8 @@ export const clinic = {
     yearsOfCare: 14,
     smilesTransformed: 21400,
     implantsPlaced: 3150,
-    googleRating: 4.3,
-    googleReviews: 120,
+    googleRating: 4.8,
+    googleReviews: 236,
     doctors: 3,
     chairsideMins: 38,
   },

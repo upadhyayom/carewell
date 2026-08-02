@@ -111,10 +111,19 @@ export default function ReceptionPage() {
   );
   const [selectedDay, setSelectedDay] = React.useState("2026-07-19");
 
-  // Appointments requested via the website chatbot (stored locally in this demo)
+  // Website bookings — local (this browser) + central (Supabase)
   const [chatAppts, setChatAppts] = React.useState<Appointment[]>([]);
   React.useEffect(() => {
-    import("@/lib/chat-leads").then((m) => setChatAppts(m.readChatAppointments()));
+    Promise.all([
+      import("@/lib/chat-leads").then((m) => m.readChatAppointments()),
+      import("@/lib/central-leads").then(async (m) => {
+        const rows = await m.fetchCentralRows();
+        return rows.map(m.rowToAppointment).filter((a): a is Appointment => a !== null);
+      }),
+    ]).then(([local, central]) => {
+      const localPhones = new Set(local.map((a) => a.phone.replace(/\D/g, "")));
+      setChatAppts([...central.filter((a) => !localPhones.has(a.phone.replace(/\D/g, ""))), ...local]);
+    });
   }, []);
 
   const allToday = [...chatAppts.filter((a) => a.date === "2026-07-19"), ...todayAppointments];

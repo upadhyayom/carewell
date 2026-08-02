@@ -12,7 +12,7 @@ import { clinic } from "@/lib/data/clinic";
 const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "Dentist",
-  name: clinic.name,
+  name: "CareWell Dental Clinic (on CGHS panel)",
   description: "CGHS empanelled dental clinic in Dwarka, New Delhi for implants, root canal, braces, aligners and kids dentistry.",
   address: {
     "@type": "PostalAddress",
@@ -65,6 +65,21 @@ fbq('track', 'PageView');`}
           src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
         />
       </noscript>
+      {/* Google Analytics 4 — activates when NEXT_PUBLIC_GA_ID is set */}
+      {process.env.NEXT_PUBLIC_GA_ID && (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+            strategy="afterInteractive"
+          />
+          <Script id="ga4-init" strategy="afterInteractive">
+            {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');`}
+          </Script>
+        </>
+      )}
       <ScrollProgress />
       <Navbar />
       <main className="flex-1">{children}</main>

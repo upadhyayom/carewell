@@ -301,22 +301,100 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* ------------------------- GOOGLE REVIEWS ------------------------- */}
+      {/* ------------------- REAL GOOGLE REVIEWS ------------------- */}
       <Section>
-        <Reveal>
-          <div className="flex flex-col items-center justify-between gap-5 rounded-3xl bg-white p-8 ring-hairline shadow-soft sm:flex-row md:p-10">
-            <div>
-              <div className="flex items-center gap-2">
-                {[1, 2, 3, 4, 5].map((i) => <Star key={i} className="size-5 fill-[#fbbc05] text-[#fbbc05]" />)}
+        <SectionHeading
+          eyebrow="Google Reviews"
+          title={`Rated ${clinic.stats.googleRating} ★ by ${clinic.stats.googleReviews} patients on Google`}
+          lead="Real reviews from our Google profile — patients most often mention painless treatment, clear explanations and caring doctors."
+        />
+        <div className="mb-6 flex flex-wrap gap-2">
+          {[
+            "Painless treatment · 18 reviews",
+            "Root canal treatment · 16 reviews",
+            "Clear explanations · 12 reviews",
+            "Caring dentist · 10 reviews",
+          ].map((c) => (
+            <span key={c} className="rounded-full bg-brand-50 px-3.5 py-1.5 text-[12.5px] font-medium text-brand-800 ring-1 ring-inset ring-brand-600/10">
+              {c}
+            </span>
+          ))}
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            {
+              name: "Tony JT",
+              when: "6 months ago",
+              text: "My father is currently undergoing dental treatment here, and we are extremely satisfied with the care.",
+            },
+            {
+              name: "Tamanna Pandey",
+              when: "4 months ago",
+              text: "Shruti Mam is not only highly skilled but also very caring and patient with her clients. The treatment was painless and handled with great care. I truly appreciate the attention and dedication given to patients here.",
+            },
+            {
+              name: "Sanjay Kumar",
+              when: "5 months ago",
+              text: "I have known Dr. Smriti from a very long time and have my full faith in her and her entire team. Recently, met Dr. Shruti whose work was highly satisfying, very professional.",
+            },
+          ].map((r, i) => (
+            <Reveal key={r.name} delay={i * 0.08}>
+              <div className="flex h-full flex-col rounded-2xl bg-white p-5 ring-hairline shadow-soft">
+                <div className="flex items-center gap-3">
+                  <span className="flex size-10 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-800">
+                    {r.name[0]}
+                  </span>
+                  <div>
+                    <p className="text-[14px] font-semibold text-ink-900">{r.name}</p>
+                    <p className="text-xs text-ink-400">{r.when} · on Google</p>
+                  </div>
+                </div>
+                <p className="mt-3 text-[13.5px] leading-relaxed text-ink-700">&ldquo;{r.text}&rdquo;</p>
               </div>
-              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-ink-900">Patients rate us on Google</h2>
-              <p className="mt-2 max-w-md text-[14.5px] leading-relaxed text-ink-500">
-                Don&apos;t take our word for it — read real reviews from real patients on our Google profile.
-              </p>
-            </div>
-            <Button size="lg" variant="outline" asChild>
-              <a href={clinic.mapsLink} target="_blank" rel="noopener noreferrer">Read our Google reviews</a>
-            </Button>
+            </Reveal>
+          ))}
+        </div>
+        <div className="mt-6 text-center">
+          <Button variant="outline" asChild>
+            <a href={clinic.mapsLink} target="_blank" rel="noopener noreferrer">
+              Read all {clinic.stats.googleReviews} reviews on Google
+            </a>
+          </Button>
+        </div>
+      </Section>
+
+      {/* ------------------- REAL PATIENT VIDEOS ------------------- */}
+      <Section className="pt-0">
+        <SectionHeading
+          eyebrow="Patient Stories"
+          title="Hear it from our patients"
+          lead="Real patients sharing their experience at the clinic, in their own words."
+        />
+        <div className="grid gap-4 sm:grid-cols-3">
+          {["/assets/testimonial-1.mp4", "/assets/testimonial-2.mp4", "/assets/testimonial-3.mp4"].map((src, i) => (
+            <Reveal key={src} delay={i * 0.08}>
+              <video
+                src={src}
+                controls
+                playsInline
+                preload="metadata"
+                className="aspect-[9/16] w-full rounded-2xl bg-ink-900 object-cover shadow-soft ring-hairline sm:aspect-auto"
+              />
+            </Reveal>
+          ))}
+        </div>
+        <Reveal className="mt-4">
+          <div className="overflow-hidden rounded-2xl bg-white p-2 ring-hairline shadow-soft">
+            <video
+              src="/assets/clinic-tour.mp4"
+              controls
+              playsInline
+              preload="metadata"
+              className="max-h-[420px] w-full rounded-xl bg-ink-900 object-cover"
+            />
+            <p className="px-3 py-2.5 text-center text-[13px] font-medium text-ink-700">
+              Take a quick tour of our clinic at Vipin Garden, Dwarka Mor
+            </p>
           </div>
         </Reveal>
       </Section>

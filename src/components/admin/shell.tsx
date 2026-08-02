@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  Users, HeartPulse, Stethoscope, ConciergeBell,
+  Users, HeartPulse, Stethoscope, ConciergeBell, Megaphone,
   FileSignature, BarChart3, Settings,
   Search, Bell, LogOut, Menu, X, ExternalLink, type LucideIcon,
 } from "lucide-react";
@@ -22,7 +22,6 @@ import { notifications } from "@/lib/data/ops";
 import { patients, doctors } from "@/lib/data/people";
 import { todayAppointments } from "@/lib/data/appointments";
 import { consentForms } from "@/lib/data/consents";
-import { courses } from "@/lib/data/courses";
 
 interface NavItem {
   label: string;
@@ -36,6 +35,7 @@ const navItems: NavItem[] = [
   { label: "Reception", href: "/admin/reception", icon: ConciergeBell, roles: ["admin", "receptionist"], group: "Daily Work" },
   { label: "My Day", href: "/admin/doctor", icon: Stethoscope, roles: ["admin", "doctor"], group: "Daily Work" },
   { label: "Enquiries & Leads", href: "/admin/leads", icon: Users, roles: ["admin", "receptionist"], group: "Daily Work" },
+  { label: "Marketing", href: "/admin/marketing", icon: Megaphone, roles: ["admin"], group: "Growth" },
   { label: "Patients", href: "/admin/patients", icon: HeartPulse, roles: ["admin", "doctor", "receptionist"], group: "Records" },
   { label: "Consent Forms", href: "/admin/consent-forms", icon: FileSignature, roles: ["admin", "doctor", "receptionist"], group: "Records" },
   { label: "Reports", href: "/admin/reports", icon: BarChart3, roles: ["admin", "doctor"], group: "System" },
@@ -65,9 +65,6 @@ function useSearchIndex(): SearchHit[] {
     );
     consentForms.slice(0, 40).forEach((c) =>
       hits.push({ type: "Consent", title: `${c.treatment} — ${c.patientName}`, sub: c.id, href: "/admin/consent-forms" })
-    );
-    courses.slice(0, 12).forEach((c) =>
-      hits.push({ type: "Course", title: c.name, sub: `${c.duration} · ₹${c.fee.toLocaleString("en-IN")}`, href: "/admin/courses" })
     );
     patients.flatMap((p) => p.invoices.map((inv) => ({ p, inv }))).forEach(({ p, inv }) =>
       hits.push({ type: "Invoice", title: `${inv.id} — ${p.name}`, sub: `₹${inv.amount.toLocaleString("en-IN")} · ${inv.status}`, href: `/admin/patients/${p.id}` })
@@ -101,7 +98,7 @@ function GlobalSearch({ open, onOpenChange }: { open: boolean; onOpenChange: (v:
             autoFocus
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search patients, appointments, consents, invoices, courses…"
+            placeholder="Search patients, appointments, consents, invoices…"
             className="h-12 w-full bg-transparent text-sm outline-none placeholder:text-ink-400"
           />
           <kbd className="hidden rounded-md bg-ink-50 px-1.5 py-0.5 text-[10px] font-medium text-ink-400 sm:block">ESC</kbd>

@@ -1,6 +1,6 @@
-"use client";
-
-/** Meta Pixel helpers — fires standard events so ads optimise for bookings. */
+/** Meta Pixel helpers — fires standard events so ads optimise for bookings.
+ *  (No "use client" directive: META_PIXEL_ID must be readable from server
+ *  layouts too; pixelTrack only touches window inside the function body.) */
 
 export const META_PIXEL_ID = "1613060277112141";
 

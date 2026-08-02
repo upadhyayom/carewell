@@ -19,6 +19,7 @@ import {
 import { inr, pct, formatDate } from "@/lib/utils";
 import { leads as staticLeads, pipelineStages, pipelineSummary } from "@/lib/data/leads";
 import { readChatLeads } from "@/lib/chat-leads";
+import { fetchCentralRows, rowToLead } from "@/lib/central-leads";
 import type { Lead, LeadStage } from "@/lib/data/types";
 import { LeadBoard } from "@/components/admin/lead-board";
 import { LeadDrawer } from "@/components/admin/lead-drawer";
@@ -33,10 +34,18 @@ export default function LeadsPage() {
   const [selected, setSelected] = React.useState<Lead | null>(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
-  // Leads captured by the website chatbot (stored locally in this demo)
+  // Leads captured on the website — local (this browser) + central (Supabase)
   const [chatLeads, setChatLeads] = React.useState<Lead[]>([]);
-  React.useEffect(() => setChatLeads(readChatLeads()), []);
-  const leads = React.useMemo(() => [...chatLeads, ...staticLeads], [chatLeads]);
+  const [centralLeads, setCentralLeads] = React.useState<Lead[]>([]);
+  React.useEffect(() => {
+    setChatLeads(readChatLeads());
+    fetchCentralRows().then((rows) => setCentralLeads(rows.map(rowToLead)));
+  }, []);
+  const leads = React.useMemo(() => {
+    const localPhones = new Set(chatLeads.map((l) => l.phone.replace(/\D/g, "")));
+    const central = centralLeads.filter((l) => !localPhones.has(l.phone.replace(/\D/g, "")));
+    return [...central, ...chatLeads, ...staticLeads];
+  }, [chatLeads, centralLeads]);
 
   const [query, setQuery] = React.useState("");
   const [stageFilter, setStageFilter] = React.useState("all");
@@ -77,7 +86,7 @@ export default function LeadsPage() {
     <div className="space-y-5">
       <PageHeader
         title="Leads CRM"
-        description={`${leads.length} leads across the pipeline · includes website chatbot leads`}
+        description={`${leads.length} leads · website chatbot, booking form & central database`}
         actions={
           <Button size="sm" className="h-9">
             <Plus className="size-4" /> New lead
